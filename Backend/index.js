@@ -3,7 +3,9 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser';
 import dbConnect from './config/dbConnect.js';
 import authRoute from './routes/authRoute.js'
+import productRoute from './routes/productRoute.js'
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
+import morgan from 'morgan';
 dotenv.config();
 
 const app = express();
@@ -16,7 +18,9 @@ app.get('/', (req, res) => {
 app.use(express.json())
 app.use(express.urlencoded({ extended : false}))
 app.use(cookieParser())
+app.use(morgan())
 app.use('/api/user', authRoute)
+app.use('/api/product', productRoute)
 
 
 app.use(notFound)
