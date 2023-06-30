@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser';
 import dbConnect from './config/dbConnect.js';
 import authRoute from './routes/authRoute.js'
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
@@ -14,6 +15,7 @@ app.get('/', (req, res) => {
 
 app.use(express.json())
 app.use(express.urlencoded({ extended : false}))
+app.use(cookieParser())
 app.use('/api/user', authRoute)
 
 
