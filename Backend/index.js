@@ -5,6 +5,7 @@ import dbConnect from './config/dbConnect.js';
 import authRoute from './routes/authRoute.js'
 import productRoute from './routes/productRoute.js'
 import blogRoute from './routes/blogRoute.js'
+import categoryRoute from './routes/categoryRoute.js'
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import morgan from 'morgan';
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(morgan())
 app.use('/api/user', authRoute)
 app.use('/api/product', productRoute)
 app.use('/api/blog', blogRoute)
+app.use('/api/category', categoryRoute)
 
 
 app.use(notFound)
