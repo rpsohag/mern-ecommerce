@@ -5,6 +5,8 @@ import { generateToken } from '../config/jwtToken.js';
 import { validateMongoDBId } from '../utils/validateMongodDBId.js';
 import { generateRefreshToken } from '../config/refreshToken.js';
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
+import { sendEmail } from './EmailController.js';
 
 
 export const useRegister = asyncHandler(async (req, res) => {
@@ -188,4 +190,81 @@ export const updateSingleUser = asyncHandler(async(req, res) => {
     } catch (error) {
         throw new Error(error)
     }
+})
+
+export const updatePassword = asyncHandler(async (req, res) => {
+    const { _id } = req.user;
+    const { password } = req.body;
+    validateMongoDBId(_id);
+    
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(password, salt);
+      
+      const user = await User.findByIdAndUpdate(_id, {
+        password: hashPassword,
+      });
+      
+      res.json(user);
+    } else {
+      const user = await User.findById(_id);
+      res.json(user);
+    }
+  });
+
+  export const forgotPasswordToken = asyncHandler (async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({email});
+    if(!user){
+        throw new Error("user not found with this email")
+    }
+    try {
+        const token = await user.createPasswordResetToken();
+        await user.save();
+        const resetURL = `Hi, please follow this link to reset your password, this link is valid till 30 minutes <a href="http://127.0.0.1:5000/api/user/reset-password/${token}">Click Here</a>`;
+        const data = {
+            to: email,
+            text: "Hello user",
+            subject: "Forgot Password",
+            html: resetURL
+        }
+        sendEmail(data)
+    } catch (error) {
+        throw new Error(error)
+        
+    }
+  })
+
+export const resetPassword = asyncHandler (async (req, res) => {
+    const {password} = req.body;
+    const { token }= req.params;
+    const hashedToken = crypto.createHash("sha256").update(token).digest('hex');
+    const user = await User.findOne({
+        passwordResetToken : hashedToken,
+        passwordResetExpires: { $gt : Date.now() }
+    })
+    if(!user){
+        throw new Error("Token expired! Please tried again later")
+    }
+
+    if (password) {
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(password, salt);
+        
+        const user = await User.findOne({
+            passwordResetToken : hashedToken,
+            passwordResetExpires: { $gt : Date.now() }
+        })
+        
+        user.password = hashPassword;
+        user.passwordResetToken = undefined;
+        user.passwordResetExpires = undefined;
+        await user.save();
+        res.json(user)
+
+
+      } else {
+        const user = await User.findById(_id);
+        res.json(user);
+      }
 })

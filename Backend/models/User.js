@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcrypt'
+import crypto from "crypto"
 
 
 // Declare the Schema of the Mongo model
@@ -42,6 +43,15 @@ var userSchema = new mongoose.Schema({
     wishlist: [{type: mongoose.Schema.Types.ObjectId, ref: "Product"}],
     refreshToken: {
         type: String
+    },
+    passwordChangeAt : {
+        type: Date
+    },
+    passwordResetToken : {
+        type: String
+    },
+    passwordResetExpires: {
+        type: Date
     }
 },{
     timestamps: true,
@@ -49,8 +59,11 @@ var userSchema = new mongoose.Schema({
 });
 
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
     try {
+        if(!this.isModified("password")){
+            next()
+        }
         if(this.isNew){
             const salt = await bcrypt.genSalt(10);
             const hashPassword = await bcrypt.hash(this.password, salt);
@@ -61,6 +74,14 @@ userSchema.pre("save", async function(next) {
         next(error)
     }
 })
+
+userSchema.methods.createPasswordResetToken = async function(){
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.passwordResetExpires = Date.now() + 30 * 60 * 1000 // 30 minutes
+    return resetToken;
+
+}
 
 userSchema.methods.isValidPassword = async  function(password){
     try {
