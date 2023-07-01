@@ -6,8 +6,8 @@ const router = express.Router();
 router.post('/create', authMiddleware, checkIsAdmin, createProduct)
 router.get('/:id', authMiddleware, checkIsAdmin, getSingleProduct)
 router.get('/', authMiddleware, checkIsAdmin, getAllProducts)
-router.put('/:id', authMiddleware, checkIsAdmin, updateProduct)
-router.delete('/:id', authMiddleware, checkIsAdmin, deleteProduct)
+router.put('/update/:id', authMiddleware, checkIsAdmin, updateProduct)
+router.delete('/delete/:id', authMiddleware, checkIsAdmin, deleteProduct)
 
 
 export default router;

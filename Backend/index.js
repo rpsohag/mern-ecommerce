@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import dbConnect from './config/dbConnect.js';
 import authRoute from './routes/authRoute.js'
 import productRoute from './routes/productRoute.js'
+import blogRoute from './routes/blogRoute.js'
 import { errorHandler, notFound } from './middlewares/errorHandler.js';
 import morgan from 'morgan';
 dotenv.config();
@@ -21,6 +22,7 @@ app.use(cookieParser())
 app.use(morgan())
 app.use('/api/user', authRoute)
 app.use('/api/product', productRoute)
+app.use('/api/blog', blogRoute)
 
 
 app.use(notFound)
