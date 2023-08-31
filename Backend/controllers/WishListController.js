@@ -26,3 +26,15 @@ export const addToWishList = AsyncHandler ( async (req, res) => {
         throw new Error(error)
     }
 })
+
+export const getWishList = AsyncHandler( async (req, res) => {
+    const { _id} = req.user;
+
+    try {
+    const user = await User.findById(_id).populate('wishlist');
+    res.json(user)
+
+    } catch (error) {
+        throw new Error(error)
+    }
+})
