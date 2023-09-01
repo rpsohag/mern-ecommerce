@@ -5,6 +5,7 @@ import dbConnect from "./config/dbConnect.js";
 import authRoute from "./routes/authRoute.js";
 import productRoute from "./routes/productRoute.js";
 import blogRoute from "./routes/blogRoute.js";
+import brandRoute from "./routes/brandRoute.js";
 import categoryRoute from "./routes/categoryRoute.js";
 import blogCatRoute from "./routes/blogCatRoute.js";
 import couponRoute from "./routes/couponRoute.js";
@@ -25,6 +26,7 @@ app.use("/api/user", authRoute);
 app.use("/api/product", productRoute);
 app.use("/api/blog", blogRoute);
 app.use("/api/category", categoryRoute);
+app.use("/api/brand", brandRoute);
 app.use("/api/blog-category", blogCatRoute);
 app.use("/api/coupon", couponRoute);
 
