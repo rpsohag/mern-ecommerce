@@ -5,8 +5,10 @@ import { generateToken } from "../config/jwtToken.js";
 import { validateMongoDBId } from "../utils/validateMongodDBId.js";
 import { generateRefreshToken } from "../config/refreshToken.js";
 import jwt from "jsonwebtoken";
+import Coupon from "../models/Coupon.js";
 import crypto from "crypto";
 import { sendEmail } from "./EmailController.js";
+import Cart from "../models/Cart.js";
 
 export const useRegister = asyncHandler(async (req, res) => {
   const { firstname, lastname, email, mobile, password } = req.body;
@@ -332,4 +334,27 @@ export const saveAddress = asyncHandler(async (req, res) => {
   } catch (error) {
     throw new Error(error);
   }
+});
+
+export const applyCoupon = asyncHandler(async (req, res) => {
+  const { coupon } = req.body;
+  const { _id } = req.user;
+  const validCoupon = await Coupon.findOne({ name: coupon });
+  if (validCoupon === null) {
+    throw new Error("Invalid Coupon");
+  }
+  const user = await User.findOne({ _id });
+  let { cartTotal } = await Cart.findOne({
+    orderBy: user._id,
+  }).populate("products.product");
+  let totalAfterDiscount = (
+    cartTotal -
+    (cartTotal * validCoupon.discount) / 100
+  ).toFixed(2);
+  await Cart.findOneAndUpdate(
+    { orderby: user._id },
+    { totalAfterDiscount },
+    { new: true }
+  );
+  res.json(totalAfterDiscount);
 });

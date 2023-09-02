@@ -1,6 +1,7 @@
 import express from "express";
 import {
   adminLogin,
+  applyCoupon,
   blockUser,
   deleteSingleUser,
   forgotPasswordToken,
@@ -30,6 +31,7 @@ router.get("/users", getAllUser);
 router.post("/cart", authMiddleware, userCart);
 router.get("/cart", authMiddleware, getUserCart);
 router.delete("/empty-cart", authMiddleware, emptyCart);
+router.post("/cart/apply-coupon", authMiddleware, applyCoupon);
 router.get("/user/:id", authMiddleware, checkIsAdmin, getSingleUser);
 router.delete("/user/:id", deleteSingleUser);
 router.put("/update/:id", authMiddleware, updateSingleUser);
