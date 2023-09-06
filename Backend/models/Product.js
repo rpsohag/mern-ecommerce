@@ -38,13 +38,9 @@ const productSchema = new mongoose.Schema(
       default: 0,
       select: false,
     },
-    images: {
-      type: [],
-    },
-    color: {
-      type: String,
-      required: true,
-    },
+    images: [],
+    color: [],
+    tags: [],
     ratings: [
       {
         star: Number,

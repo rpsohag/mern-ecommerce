@@ -10,6 +10,7 @@ import categoryRoute from "./routes/categoryRoute.js";
 import blogCatRoute from "./routes/blogCatRoute.js";
 import couponRoute from "./routes/couponRoute.js";
 import orderRoute from "./routes/orderRoute.js";
+import colorRoute from "./routes/colorRoute.js";
 import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use("/api/brand", brandRoute);
 app.use("/api/blog-category", blogCatRoute);
 app.use("/api/coupon", couponRoute);
 app.use("/api/order", orderRoute);
+app.use("/api/color", colorRoute);
 
 app.use(notFound);
 app.use(errorHandler);
