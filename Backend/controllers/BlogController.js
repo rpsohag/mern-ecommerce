@@ -1,7 +1,7 @@
 import AsyncHandler from "express-async-handler";
 import fs from "fs";
 import Blog from "../models/Blog.js";
-import cloudinaryUploadImg from "../utils/cloudinary.js";
+import { cloudinaryUploadImg } from "../utils/cloudinary.js";
 
 export const createBlog = AsyncHandler(async (req, res) => {
   try {

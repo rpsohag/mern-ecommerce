@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createProduct,
+  deleteImages,
   deleteProduct,
   getAllProducts,
   getSingleProduct,
@@ -18,7 +19,7 @@ router.get("/:id", authMiddleware, checkIsAdmin, getSingleProduct);
 router.get("/", authMiddleware, checkIsAdmin, getAllProducts);
 router.put("/update/:id", authMiddleware, checkIsAdmin, updateProduct);
 router.put(
-  "/upload/:id",
+  "/upload",
   authMiddleware,
   checkIsAdmin,
   uploadPhoto.array("images", 10),
@@ -28,5 +29,6 @@ router.put(
 router.put("/wishlist", authMiddleware, addToWishList);
 router.put("/rating", authMiddleware, productRating);
 router.delete("/delete/:id", authMiddleware, checkIsAdmin, deleteProduct);
+router.delete("/delete-img/:id", authMiddleware, checkIsAdmin, deleteImages);
 
 export default router;

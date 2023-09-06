@@ -6,7 +6,7 @@ cloudinary.config({
   api_secret: "DHmeTZpLWGLph6AF248IHnad5Gs",
 });
 
-const cloudinaryUploadImg = async (fileToUploads) => {
+export const cloudinaryUploadImg = async (fileToUploads) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(fileToUploads, (error, result) => {
       if (error) {
@@ -14,10 +14,26 @@ const cloudinaryUploadImg = async (fileToUploads) => {
       } else {
         resolve({
           url: result.secure_url,
+          asset_id: result.asset_id,
+          public_id: result.public_id,
         });
       }
     });
   });
 };
 
-export default cloudinaryUploadImg;
+export const cloudinaryDeleteImg = async (fileToDelete) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(fileToDelete, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve({
+          url: result.secure_url,
+          asset_id: result.asset_id,
+          public_id: result.public_id,
+        });
+      }
+    });
+  });
+};
